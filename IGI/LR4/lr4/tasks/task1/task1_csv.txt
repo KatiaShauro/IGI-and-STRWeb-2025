@@ -1,0 +1,7 @@
+"dict_name","real_name","total_count","healthy_count"
+"fir","Fir","150","146"
+"pine_tree","Pine tree","124","100"
+"oak","Oak","54","52"
+"maple","Maple","25","17"
+"birch","Birch","28","25"
+"new_tree","new tree","50","45"
