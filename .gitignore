@@ -1,0 +1,71 @@
+# Файлы Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Файлы PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Файлы кэша и логи
+.cache/
+.pytest_cache/
+*.log
+logs/
+
+# Файлы виртуального окружения
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Файлы операционной системы
+.DS_Store
+Thumbs.db
+
+# Файлы Jupyter Notebook
+.ipynb_checkpoints/
+
+# Файлы настроек и переменных окружения
+.env
+.venv
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Файлы mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Файлы coverage
+.coverage
+htmlcov/
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
