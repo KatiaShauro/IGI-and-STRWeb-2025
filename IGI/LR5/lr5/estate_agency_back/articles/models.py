@@ -1,8 +1,10 @@
 from django.db import models
 
+from estate_agency.models import User
+
 
 class Article(models.Model):
-    author = models.ForeignKey("User", on_delete=models.SET_NULL)
+    author = models.ManyToManyField(User, blank=True)
     title = models.CharField(
         null=False,
         blank=False,

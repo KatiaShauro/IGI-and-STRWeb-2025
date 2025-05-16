@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block site_name %}Main page{% endblock %}
+
+{% block content %}
+    <h1>Welcome!</h1>
+    <p>This is my main page of Django-app</p>
+    <h2>Look at this article:</h2>
+    <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px; background-color: #f9f9f9; max-width: 800px;">
+        <div style="display: flex; align-items: flex-start; gap: 20px;">
+            {% if article.image %}
+                <img src="{{ article.image.url }}" alt="Article picture" width="150"
+                     style="flex-shrink: 0; border: 1px solid #ddd; border-radius: 8px;">
+            {% endif %}
+
+            <div>
+                <h3>{{ article.title }}</h3>
+                {% if article.short_content %}
+                    <p><strong>Short content:</strong> {{ article.short_content }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <p><a href="{% url 'faq' %}">See more</a></p>
+    </div>
+{% endblock %}

@@ -1,6 +1,8 @@
 from django.core.validators import MinLengthValidator, MinValueValidator, MaxValueValidator
 from django.db import models
 
+from estate_agency.models import User
+
 
 class Review(models.Model):
     title = models.CharField(
@@ -11,7 +13,7 @@ class Review(models.Model):
         validators=[MinLengthValidator(5)],
         help_text="Заголовок отзыва"
     )
-    author = models.ForeignKey("User", on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     content = models.TextField(
         blank=True,
         null=True,

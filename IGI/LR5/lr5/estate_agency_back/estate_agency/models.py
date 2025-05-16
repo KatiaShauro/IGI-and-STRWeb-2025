@@ -31,14 +31,27 @@ class User(models.Model):
     full_name = models.CharField(
         blank=False,
         null=False,
-        verbose_name="Full ame",
+        verbose_name="Full name",
         help_text="ФИО",
         max_length=80
+    )
+    phone_number = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Phone number",
+        help_text="Телефон",
+        validators=[phone_num_validator],
+    )
+    email = models.EmailField(
+        blank=True,
+        null=True,
+        verbose_name="Email",
+        help_text="Почта",
     )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 
-class Employee(models.Model, User):
+class Employee(models.Model):
     work_type = models.ForeignKey("TypeOfWork", on_delete=models.PROTECT, null=True)
     work_experience = models.FloatField(
         null=True,
@@ -48,9 +61,14 @@ class Employee(models.Model, User):
         validators=[MinValueValidator(0),
                     MaxValueValidator(70)]
     )
+    user = models.OneToOneField("User", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return (f"Name: {self.user.full_name}\n"
+                f"Work experience: {self.work_experience}")
 
 
-class Owner(models.Model, User):
+class Owner(models.Model):
     rating = models.FloatField(
         default=0.0,
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
@@ -61,25 +79,18 @@ class Owner(models.Model, User):
         null=True,
         help_text="Дополнительная информация о владельце"
     )
-    phone_number = models.TextField(
-        blank=False,
-        null=False,
-        verbose_name="Phone number",
-        help_text="Телефон",
-        validators=[phone_num_validator]
-    )
     preferred_contact_time = models.CharField(
         max_length=50,
         blank=True,
         help_text="Предпочтительное время связи"
     )
+    user = models.OneToOneField("User", on_delete=models.CASCADE)
 
     def __str__(self):
-        return (f"Name: {self.full_name}\n"
-                f"Work experience: {self.work_experience}")
+        return f"Owner Name: {self.user.full_name}\n"
 
 
-class Customer(models.Model, User):
+class Customer(models.Model):
     budget = models.DecimalField(
         max_digits=12,
         decimal_places=2,
@@ -95,6 +106,10 @@ class Customer(models.Model, User):
         blank=True,
         help_text="Дополнительная информация о клиенте"
     )
+    user = models.OneToOneField("User", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Customer {self.user.full_name} with {self.budget}$"
 
 
 class RealtyType(models.Model):
@@ -204,3 +219,8 @@ class Deal(models.Model):
         verbose_name="End of payment",
         help_text="Фактическая дата завершения платежей"
     )
+
+    def __str__(self):
+        return (f"Deal between {self.owner.full_name} "
+                f"and {self.customer.full_name}\n"
+                f"Realty - {self.realty.name}, {self.realty.price}$")

@@ -1,4 +1,3 @@
-from dateutil.relativedelta import relativedelta
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -38,11 +37,6 @@ class Promocode(models.Model):
         verbose_name="Validity period",
         help_text="Срок действия (в месяцах)"
     )
-    @property
-    def expires_at(self):
-        if self.created_at and self.available_period:
-            return self.created_at + relativedelta(months=self.available_period)
-        return None
 
     def __str__(self):
         return f"{self.secret_string} for {self.available_period} month"
