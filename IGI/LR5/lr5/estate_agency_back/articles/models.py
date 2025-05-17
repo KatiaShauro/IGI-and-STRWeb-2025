@@ -4,7 +4,7 @@ from estate_agency.models import User
 
 
 class Article(models.Model):
-    author = models.ManyToManyField(User, blank=True)
+    author = models.ManyToManyField(User, blank=False)
     title = models.CharField(
         null=False,
         blank=False,
@@ -36,4 +36,5 @@ class Article(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Article '{self.title}' published by {self.author}"
+        authors = ", ".join(author.full_name for author in self.author.all())
+        return f"Article '{self.title}' published by {authors}"

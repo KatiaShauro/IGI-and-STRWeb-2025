@@ -5,6 +5,13 @@ from estate_agency.models import User
 
 
 class Review(models.Model):
+    class RateChoices(models.TextChoices):
+        EXCELLENT = "5", "Отлично"
+        GOOD = "4", "Хорошо"
+        NORM = "3", "Нормально"
+        BAD = "2", "Плохо"
+        HORRIBLE = "1", "Ужасно"
+
     title = models.CharField(
         blank=False,
         null=False,
@@ -21,13 +28,13 @@ class Review(models.Model):
         validators=[MinLengthValidator(5)],
         help_text="Содержание отзыва"
     )
-    rate = models.FloatField(
+    rate = models.CharField(
         null=False,
         blank=False,
         verbose_name="Rating",
         help_text="Оценка",
-        validators=[MinValueValidator(0),
-                    MaxValueValidator(10)]
+        choices=RateChoices.choices,
+        max_length=10
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

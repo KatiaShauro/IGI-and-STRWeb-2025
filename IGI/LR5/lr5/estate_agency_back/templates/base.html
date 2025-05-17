@@ -43,12 +43,33 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        .top-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .top-links a:hover {
+            text-decoration: underline;
+            color: white;
+        }
+
     </style>
     {% block extra_head %}{% endblock %}
 </head>
 <body>
 
     <header>
+        <div class="top-links" style="position: absolute; top: 10px; right: 20px; color: white">
+            {% if user.is_authenticated %}
+                <span>Hello, {{ user.username }} | </span>
+                <span><a href="{% url 'profile' %}">Personal account | </a></span>
+                <span><a href="{% url 'logout' %}">Log out</a></span>
+            {% else %}
+                <span><a href="{% url 'registration' %}">Register | </a></span>
+                <span><a href="{% url 'login' %}">Login | </a></span>
+            {% endif %}
+        </div>
         <h1>Estate Agency</h1>
         <h2>{% block site_name %}{% endblock %}</h2>
     </header>
@@ -67,6 +88,10 @@
             <a href="{% url 'contacts' %}">Contacts</a>
             <a href="{% url 'privacy_policy' %}">Privacy policy</a>
             <a href="{% url 'vacancies' %}">Vacancies</a>
+            <a href="{% url 'reviews' %}">Reviews</a>
+            {% if user.is_staff %}
+            <a href="{% url 'promocodes' %}">Promo codes</a>
+            {% endif %}
         </div>
     </footer>
 

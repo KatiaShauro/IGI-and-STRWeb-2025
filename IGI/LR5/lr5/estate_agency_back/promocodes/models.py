@@ -3,8 +3,8 @@ from django.db import models
 
 
 class DiscountType(models.TextChoices):
-    PERCENT = "PERCENT", "Percent"
-    AMOUNT = "AMOUNT", "Amount"
+    PERCENT = "%", "Percent"
+    AMOUNT = "$", "Amount"
 
 
 class Promocode(models.Model):
@@ -18,7 +18,8 @@ class Promocode(models.Model):
     discount_type = models.CharField(
         choices=DiscountType.choices,
         default=DiscountType.AMOUNT,
-        help_text="Тип скидки (процент/фиксированная)"
+        help_text="Тип скидки (процент/фиксированная)",
+        max_length=8
     )
     amount = models.IntegerField(
         null=False,

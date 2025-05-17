@@ -48,10 +48,28 @@ class User(models.Model):
         verbose_name="Email",
         help_text="Почта",
     )
+    birth_day = models.DateField(
+        blank=False,
+        null=False,
+        verbose_name="Birthday date",
+        help_text="Дата рождения",
+        validators=[MaxValueValidator(datetime.date.today()),
+                    MinValueValidator(datetime.date.today().replace(year=1900))]
+    )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.full_name + ",  " + self.email
 
 
 class Employee(models.Model):
+    image = models.ImageField(
+        blank=True,
+        null=True,
+        verbose_name="Employee image",
+        help_text="Фото сотрудника",
+        upload_to='employee_images/'
+    )
     work_type = models.ForeignKey("TypeOfWork", on_delete=models.PROTECT, null=True)
     work_experience = models.FloatField(
         null=True,
@@ -72,7 +90,7 @@ class Owner(models.Model):
     rating = models.FloatField(
         default=0.0,
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
-        help_text="Рейтинг владельца от 0 до 5"
+        help_text="Рейтинг владельца от 0 до 10"
     )
     notes = models.TextField(
         blank=True,
@@ -172,6 +190,10 @@ class Realty(models.Model):
                     MaxValueValidator(datetime.datetime.now().year)]
     )
 
+    class Meta:
+        verbose_name="Realty"
+        verbose_name_plural= "Realty"
+
     def __str__(self):
         return f"{self.name} for {self.price}"
 
@@ -221,6 +243,6 @@ class Deal(models.Model):
     )
 
     def __str__(self):
-        return (f"Deal between {self.owner.full_name} "
-                f"and {self.customer.full_name}\n"
+        return (f"Deal between {self.owner.user.full_name} "
+                f"and {self.customer.user.full_name}\n"
                 f"Realty - {self.realty.name}, {self.realty.price}$")

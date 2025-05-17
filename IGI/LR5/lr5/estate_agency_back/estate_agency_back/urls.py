@@ -24,5 +24,6 @@ urlpatterns = [
     path('estate_agency/', include('estate_agency.urls')),
     path('articles/', include('articles.urls')),
     path('reviews/', include('reviews.urls')),
+    path('promocodes/', include('promocodes.urls')),
     path('', include('site_manager.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

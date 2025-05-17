@@ -13,7 +13,8 @@ class AboutCompany(models.Model):
         blank=False,
         null=False,
         default="name",
-        help_text="Название компании"
+        help_text="Название компании",
+        max_length=40
     )
     video = models.URLField(
         unique=True,
@@ -62,33 +63,18 @@ class FAQ(models.Model):
 
 
 class Contacts(models.Model):
-    image = models.ImageField(
-        blank=True,
-        null=True,
-        verbose_name="Employee image",
-        help_text="Фото сотрудника",
-        upload_to='employee_images/'
-    )
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE)
-    phone_number = models.TextField(
-        blank=False,
-        null=False,
-        verbose_name="Phone number",
-        help_text="Телефон",
-        validators=[phone_num_validator]
-    )
-    email = models.EmailField(
-        unique=True,
-        blank=False,
-        null=False,
-        verbose_name="Email",
-        help_text="Почта",
-    )
+    work_description = models.TextField(max_length=500, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Contacts"
+        verbose_name_plural = "Contacts"
 
     def __str__(self):
-        return (f"Name: {self.employee.full_name}\n"
-                f"Phone: {self.phone_number}"
-                f"Email: {self.email}"
+        return (f"Name: {self.employee.user.full_name}\n"
+                f"Work: {self.employee.work_type}\n"
+                f"Phone: {self.employee.user.phone_number}\n"
+                f"Email: {self.employee.user.email}"
                 )
 
 
@@ -108,6 +94,10 @@ class Vacancy(models.Model):
         null=True,
         blank=True
     )
+
+    class Meta:
+        verbose_name="Vacancy"
+        verbose_name_plural="Vacancies"
 
     def __str__(self):
         return self.title
