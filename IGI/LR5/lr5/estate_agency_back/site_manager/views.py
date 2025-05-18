@@ -1,7 +1,13 @@
+import calendar
+import json
+from http import HTTPStatus
+
+import requests
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import Http404
 from django.shortcuts import render, redirect
+from django.utils.timezone import now, localtime
 
 from .forms import CustomRegistrationForm
 from .models import AboutCompany, FAQ, PrivacyPolicy, Vacancy, Contacts
@@ -10,13 +16,44 @@ from estate_agency.models import Employee, User, Owner, Customer
 
 
 
-# Create your views here.
 def home(request):
     last_article = Article.objects.last()
     if not last_article:
         last_article = ""
+
+    utc_now = now()
+    local_now = localtime(utc_now)
+
+    cal = calendar.TextCalendar()
+    text_calendar = cal.formatmonth(local_now.year, local_now.month)
+
+    try:
+        response = requests.get("https://catfact.ninja/fact")
+        if response.status_code == HTTPStatus.OK:
+            response_body = json.loads(response.content)
+            cat_fact = response_body["fact"]
+        else:
+            cat_fact = "No cat fact ☹"
+    except Exception:
+        cat_fact = "No cat fact ☹"
+
+    try:
+        response = requests.get("https://dog.ceo/api/breeds/image/random")
+        data = response.json()
+        dog_image_url = data["message"]
+    except Exception:
+        dog_image_url = "No dog picture ☹"
+
+    context = {
+        "utc_now": utc_now,
+        "local_now": local_now,
+        "text_calendar": text_calendar,
+        "article": last_article,
+        "cat_fact": cat_fact,
+        "dog_image_url": dog_image_url
+    }
     return render(request, "site_manager/home.html",
-    {"article": last_article})
+    context)
 
 
 def about(request):
@@ -95,3 +132,7 @@ def profile(request):
                   { "employee": employee,
                             "owner": owner,
                             "customer": customer})
+
+
+def statistics(request):
+    return render(request, 'site_manager/statistics.html')

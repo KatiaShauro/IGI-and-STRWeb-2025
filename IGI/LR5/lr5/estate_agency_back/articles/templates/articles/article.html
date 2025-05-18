@@ -24,7 +24,7 @@
 
         <!-- Фул текст статьи -->
         <p>{{art.content}}</p>
-        <p>{{ art.created_at }} by {% for auth in art.author.all %} , {{auth.full_name}} {% endfor %}</p>
+        <p>{{ art.created_at|date:"d/m/Y H:i" }} by {% for auth in art.author.all %} , {{auth.full_name}} {% endfor %}</p>
         <p><a href="{% url 'news' %}">← Back to articles</a></p>
     </div>
 </div>

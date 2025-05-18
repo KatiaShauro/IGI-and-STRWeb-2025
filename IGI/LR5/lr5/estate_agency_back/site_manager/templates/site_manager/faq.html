@@ -8,7 +8,7 @@
         <hr>
         <p><strong>Question: </strong>{{item.question}}</p>
         <p><strong>Answer: </strong>{{item.answer}}</p>
-        <p>Answer date: {{item.answer_date}}</p>
+        <p>Answer date: {{item.answer_date|date:"d/m/Y H:i"}}</p>
     {% endfor %}
 
 {% endblock %}

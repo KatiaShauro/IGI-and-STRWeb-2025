@@ -56,6 +56,14 @@ class User(models.Model):
         validators=[MaxValueValidator(datetime.date.today()),
                     MinValueValidator(datetime.date.today().replace(year=1900))]
     )
+    is_customer =models.BooleanField(
+        null=False,
+        default=False
+    )
+    is_owner =models.BooleanField(
+        null=False,
+        default=False
+    )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -188,6 +196,17 @@ class Realty(models.Model):
         help_text="Год постройки",
         validators=[MinValueValidator(1800),
                     MaxValueValidator(datetime.datetime.now().year)]
+    )
+    photo = models.ImageField(
+        blank=True,
+        null=True,
+        verbose_name="Realty photo",
+        help_text="Фото недвижимости",
+        upload_to='realties/'
+    )
+    is_in_deal = models.BooleanField(
+        null=False,
+        default=False
     )
 
     class Meta:

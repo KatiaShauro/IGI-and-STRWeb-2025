@@ -51,8 +51,30 @@
         </div>
         <div>
             <h1>Estate agency actions</h1>
-            <p><strong>Type : </strong></p>
-            <p><strong>Description: </strong></p>
+            {% if customer %}
+            <p><strong>For customers : </strong></p>
+            <ul>
+                <li><a href="{% url 'estates-list' %}">Estates list</a></li>
+                <li><a href="{% url 'my-deals' %}">My deals</a></li>
+            </ul>
+            {% endif %}
+            {% if owner %}
+            <p><strong>For owners : </strong></p>
+            <ul>
+                <li><a href="{% url 'estates-list' %}">Estates list</a></li>
+                <li><a href="{% url 'realty-add' %}">Add real estate</a></li>
+                <li><a href="{% url 'my-estates' %}">My estates</a></li>
+                <li><a href="{% url 'my-deals' %}">My deals</a></li>
+            </ul>
+            {% endif %}
+            {% if employee %}
+            <p><strong>For employees : </strong></p>
+            <ul>
+                <li><a href="{% url 'estates-list' %}">Estates list</a></li>
+                <li><a href="{% url 'deals' %}">All deals</a></li>
+                <li><a href="{% url 'statistics' %}">Statistics</a></li>
+            </ul>
+            {% endif %}
         </div>
 
     </div>

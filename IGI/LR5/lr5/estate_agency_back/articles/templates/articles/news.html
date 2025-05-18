@@ -22,7 +22,7 @@
                 </div>
             </div>
         <p><a href="{% url 'article' art.pk %}">See more</a></p>
-        <p>{{ art.created_at }} by {% for auth in art.author.all %} , {{auth.full_name}} {% endfor %}</p>
+        <p>{{ art.created_at|date:"d/m/Y H:i" }} by {% for auth in art.author.all %} , {{auth.full_name}} {% endfor %}</p>
     </div>
     {% endfor %}
 <p><a href="{% url 'home' %}">← Back to main page</a></p>

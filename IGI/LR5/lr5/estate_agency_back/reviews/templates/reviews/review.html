@@ -24,9 +24,9 @@
         {% if review.content %}
             <p>{{review.content}}</p>
         {% endif %}
-            <p><strong>Created at: </strong>{{review.created_at}}</p>
+            <p><strong>Created at: </strong>{{review.created_at|date:"d/m/Y H:i"}}</p>
         {% if review.updated_at %}
-            <p><strong>Updated at: </strong>{{review.updated_at}}</p>
+            <p><strong>Updated at: </strong>{{review.updated_at|date:"d/m/Y H:i"}}</p>
         {% endif %}
     </div>
     {% endfor %}

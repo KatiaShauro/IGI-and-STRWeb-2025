@@ -1,7 +1,9 @@
-from django import forms
-from django.core.validators import MinValueValidator
+import datetime
 
-from .models import Customer, Owner, Employee
+from django import forms
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+from .models import Customer, Owner, Employee, Realty, Deal
 
 secrets = {
     "employee": "employee_secret_code",
@@ -51,3 +53,45 @@ class EmployeeForm(forms.ModelForm):
         if secret_code != secrets["employee"]:
             raise forms.ValidationError("Secret codes mismatches. You are not employee")
         return secret_code
+
+
+class RealtyForm(forms.ModelForm):
+    price = forms.DecimalField(
+        validators=[MinValueValidator(0)],
+        help_text="Price must be positive"
+    )
+    area = forms.DecimalField(
+        validators=[MinValueValidator(0)],
+        help_text="Area must be positive"
+    )
+    built_year = forms.DecimalField(
+        validators=[MinValueValidator(0),
+                    MaxValueValidator(datetime.date.today().year)],
+        help_text=f"Build year must be positive and less than {datetime.date.today().year}"
+    )
+    class Meta:
+        model = Realty
+        fields = ["type", "name", "address", "price",
+                  "area", "built_year", "photo"]
+        widgets = {
+            "type": forms.Select(),
+        }
+
+
+class DealForm(forms.ModelForm):
+    class Meta:
+        model = Deal
+        fields = ["deal_type"]
+        widgets = {
+            "deal_type": forms.Select(),
+        }
+
+
+class DealUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Deal
+        fields = ["status", "actual_end_date"]
+        widgets = {
+            "status": forms.Select(),
+            "actual_end_date": forms.DateInput(attrs={'type': 'date'}),
+        }

@@ -3,23 +3,51 @@
 {% block site_name %}Main page{% endblock %}
 
 {% block content %}
-    <h1>Welcome!</h1>
-    <p>This is my main page of Django-app</p>
-    <h2>Look at this article:</h2>
-    <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px; background-color: #f9f9f9; max-width: 800px;">
-        <div style="display: flex; align-items: flex-start; gap: 20px;">
-            {% if article.image %}
-                <img src="{{ article.image.url }}" alt="Article picture" width="150"
-                     style="flex-shrink: 0; border: 1px solid #ddd; border-radius: 8px;">
-            {% endif %}
+<div style="display: flex; gap: 40px; justify-content: center; align-items: flex-start; padding: 20px;">
 
-            <div>
-                <h3>{{ article.title }}</h3>
-                {% if article.short_content %}
-                    <p><strong>Short content:</strong> {{ article.short_content }}</p>
+    <!-- Левая колонка -->
+    <div style="flex: 2;">
+        <h1>Welcome!</h1>
+        <p>This is my main page of Django-app</p>
+
+        <h1><a href="{% url 'estates-list' %}">All offered estates</a></h1>
+
+        <h2>📚 Look at this article:</h2>
+        <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px; background-color: #f9f9f9; max-width: 800px;">
+            <div style="display: flex; align-items: flex-start; gap: 20px;">
+                {% if article.image %}
+                    <img src="{{ article.image.url }}" alt="Article picture" width="250"
+                        style="flex-shrink: 0; border: 1px solid #ddd; border-radius: 8px;">
                 {% endif %}
+
+                <div>
+                    <h3>{{ article.title }}</h3>
+                    {% if article.short_content %}
+                        <p><strong>Short content:</strong> {{ article.short_content }}</p>
+                    {% endif %}
+                </div>
             </div>
+            <p><a href="{% url 'article' article.id %}">See more</a></p>
         </div>
-        <p><a href="{% url 'article' article.id %}">See more</a></p>
+
     </div>
+
+    <!-- Правая колонка -->
+    <div style="flex: 1; border-left: 2px solid #eee; padding-left: 20px;">
+        <h3>🕒 Current Date and Time</h3>
+        <p><strong>Local (Your Time):</strong> {{ local_now|date:"d/m/Y H:i" }}</p>
+        <p><strong>UTC:</strong> {{ utc_now|date:"d/m/Y H:i" }}</p>
+
+        <h3>📅 Calendar:</h3>
+        <pre style="font-size: 14px;">{{ text_calendar }}</pre>
+
+        <h3>🐱 Random cat fact: </h3>
+        <p>{{cat_fact}}</p>
+
+        <h3>🐶 Here's a random dog to make your day better!</h3>
+            <img src="{{ dog_image_url }}" alt="Random Dog" style="max-width: 400px;
+                border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2);">
+    </div>
+
+</div>
 {% endblock %}
