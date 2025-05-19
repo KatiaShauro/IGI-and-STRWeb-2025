@@ -1,16 +1,21 @@
 import datetime
 import re
-
+import logging
+import pytz
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User as DjangoUser
 from django.core.exceptions import ValidationError
 
-from estate_agency.models import User
+from estate_agency.models import UserProfile
+
+
+logger = logging.getLogger(__name__)
 
 
 def phone_num_validator(value):
     if not re.match(r"^\+375(:?33|29|25|44)\d{7}$", value):
+        logger.warning("Attempt to register incorrect phone number")
         raise ValidationError("Enter correct phone num")
 
 
@@ -19,10 +24,10 @@ def birth_date_validator(value : datetime.date):
     today_18_years_ago = datetime.date(today.year - 18, today.month, today.day)
     today_100_years_ago = datetime.date(today.year - 100, today.month, today.day)
     if value > today_18_years_ago:
+        logger.warning("Attempt to register a user under 18 y.o.")
         raise ValidationError("You must be at least 18 years old.")
     if value >= datetime.date.today() or value < today_100_years_ago:
         raise ValidationError("Incorrect date ")
-
 
 
 class CustomRegistrationForm(UserCreationForm):
@@ -32,6 +37,11 @@ class CustomRegistrationForm(UserCreationForm):
     birth_date = forms.DateField(
         label="Date of Birth",
         widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    time_zone = forms.ChoiceField(
+        choices=[(tz, tz) for tz in pytz.common_timezones],
+        label="Time Zone",
+        initial="UTC"
     )
 
     class Meta:
@@ -53,12 +63,13 @@ class CustomRegistrationForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=commit)
         try:
-           User.objects.create(
+           UserProfile.objects.create(
                 user=user,
                 full_name=self.cleaned_data["full_name"],
                 birth_day=self.cleaned_data["birth_date"],
                 phone_number=self.cleaned_data["phone_number"],
-                email=self.cleaned_data["email"]
+                email=self.cleaned_data["email"],
+                time_zone=self.cleaned_data["time_zone"]
             )
         except ValidationError:
             user.delete()

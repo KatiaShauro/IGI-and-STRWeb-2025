@@ -89,9 +89,7 @@
             <a href="{% url 'privacy_policy' %}">Privacy policy</a>
             <a href="{% url 'vacancies' %}">Vacancies</a>
             <a href="{% url 'reviews' %}">Reviews</a>
-            {% if user.is_staff %}
             <a href="{% url 'promocodes' %}">Promo codes</a>
-            {% endif %}
         </div>
     </footer>
 

@@ -1,10 +1,10 @@
 from django.db import models
 
-from estate_agency.models import User
+from estate_agency.models import UserProfile
 
 
 class Article(models.Model):
-    author = models.ManyToManyField(User, blank=False)
+    author = models.ManyToManyField(UserProfile, blank=False)
     title = models.CharField(
         null=False,
         blank=False,

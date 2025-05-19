@@ -1,5 +1,7 @@
 import datetime
 from decimal import Decimal
+
+import pytz
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator, RegexValidator
 from django.db import models
@@ -27,7 +29,7 @@ class TypeOfWork(models.Model):
         return self.name
 
 
-class User(models.Model):
+class UserProfile(models.Model):
     full_name = models.CharField(
         blank=False,
         null=False,
@@ -64,7 +66,12 @@ class User(models.Model):
         null=False,
         default=False
     )
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    time_zone = models.CharField(
+        max_length=40,
+        choices=[(tz, tz) for tz in pytz.common_timezones],
+        default="UTC"
+    )
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.full_name + ",  " + self.email
@@ -87,7 +94,7 @@ class Employee(models.Model):
         validators=[MinValueValidator(0),
                     MaxValueValidator(70)]
     )
-    user = models.OneToOneField("User", on_delete=models.CASCADE)
+    user = models.OneToOneField("UserProfile", on_delete=models.CASCADE)
 
     def __str__(self):
         return (f"Name: {self.user.full_name}\n"
@@ -110,7 +117,7 @@ class Owner(models.Model):
         blank=True,
         help_text="Предпочтительное время связи"
     )
-    user = models.OneToOneField("User", on_delete=models.CASCADE)
+    user = models.OneToOneField("UserProfile", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"Owner Name: {self.user.full_name}\n"
@@ -132,7 +139,7 @@ class Customer(models.Model):
         blank=True,
         help_text="Дополнительная информация о клиенте"
     )
-    user = models.OneToOneField("User", on_delete=models.CASCADE)
+    user = models.OneToOneField("UserProfile", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Customer {self.user.full_name} with {self.budget}$"
@@ -242,13 +249,19 @@ class Deal(models.Model):
     realty = models.ForeignKey(
         "Realty",
         on_delete=models.PROTECT,
-        related_name="deals",
+        related_name="deal_realty",
         help_text="Объект недвижимости"
     )
     customer = models.ForeignKey(
         "Customer",
         on_delete=models.PROTECT,
-        related_name="deals",
+        related_name="deal_customer",
+    )
+    employee = models.ForeignKey(
+        "Employee",
+        on_delete=models.PROTECT,
+        related_name="deal_employee",
+        null=True
     )
     owner = models.ForeignKey(
         "Owner",
@@ -265,3 +278,17 @@ class Deal(models.Model):
         return (f"Deal between {self.owner.user.full_name} "
                 f"and {self.customer.user.full_name}\n"
                 f"Realty - {self.realty.name}, {self.realty.price}$")
+
+
+class Stats(models.Model):
+    picture = models.ImageField(
+        blank=True,
+        null=True,
+        verbose_name="Graphics",
+        help_text="Статистический график",
+        upload_to='statistics/'
+    )
+    name = models.CharField(null=False, blank=False)
+    main_number = models.FloatField(null=False, blank=False, default=0)
+    number2 = models.FloatField(null=True, default=0)
+    number3 = models.FloatField(null=True, default=0)

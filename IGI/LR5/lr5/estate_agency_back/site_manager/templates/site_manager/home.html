@@ -12,6 +12,7 @@
 
         <h1><a href="{% url 'estates-list' %}">All offered estates</a></h1>
 
+        {% if article %}
         <h2>📚 Look at this article:</h2>
         <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px; background-color: #f9f9f9; max-width: 800px;">
             <div style="display: flex; align-items: flex-start; gap: 20px;">
@@ -29,6 +30,7 @@
             </div>
             <p><a href="{% url 'article' article.id %}">See more</a></p>
         </div>
+        {% endif %}
 
     </div>
 
@@ -36,7 +38,7 @@
     <div style="flex: 1; border-left: 2px solid #eee; padding-left: 20px;">
         <h3>🕒 Current Date and Time</h3>
         <p><strong>Local (Your Time):</strong> {{ local_now|date:"d/m/Y H:i" }}</p>
-        <p><strong>UTC:</strong> {{ utc_now|date:"d/m/Y H:i" }}</p>
+        <p><strong>UTC:</strong> {{ utc_now }}</p>
 
         <h3>📅 Calendar:</h3>
         <pre style="font-size: 14px;">{{ text_calendar }}</pre>

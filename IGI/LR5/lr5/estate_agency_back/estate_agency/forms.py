@@ -23,12 +23,40 @@ class CustomerForm(forms.ModelForm):
         }
 
 
+class CustomerAdminForm(forms.ModelForm):
+    budget = forms.DecimalField(
+        validators=[MinValueValidator(0)],
+        help_text="Budget must be positive"
+    )
+    class Meta:
+        model = Customer
+        fields = ["budget", "notes", "is_vip", "user"]
+        widgets = {
+            "notes": forms.Textarea(attrs={"rows": 4, "placeholder": "Leave some notes about yourself..."}),
+            "user": forms.Select()
+        }
+
+
 class OwnerForm(forms.ModelForm):
     class Meta:
         model = Owner
         fields = ["preferred_contact_time", "notes"]
         widgets = {
             "notes": forms.Textarea(attrs={"rows": 4, "placeholder": "Leave some notes about yourself..."}),
+        }
+
+
+class EmployeeAdminForm(forms.ModelForm):
+    work_experience = forms.DecimalField(
+        validators=[MinValueValidator(0)],
+        help_text="Work experience must be positive"
+    )
+    class Meta:
+        model = Employee
+        fields = ["work_type", "work_experience", "image", "user"]
+        widgets = {
+           "work_type": forms.Select(),
+            "user": forms.Select()
         }
 
 
@@ -84,6 +112,18 @@ class DealForm(forms.ModelForm):
         fields = ["deal_type"]
         widgets = {
             "deal_type": forms.Select(),
+        }
+
+
+class DealAdminForm(forms.ModelForm):
+    class Meta:
+        model = Deal
+        fields = ["deal_type", "status", "realty", "customer"]
+        widgets = {
+            "deal_type": forms.Select(),
+            "status" : forms.Select(),
+            "realty": forms.Select(),
+            "customer": forms.Select(),
         }
 
 

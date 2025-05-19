@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import TypeOfWork, User, Employee, Owner, Customer, RealtyType, Realty, Deal
+from .models import TypeOfWork, UserProfile, Employee, Owner, Customer, RealtyType, Realty, Deal
 
 
 @admin.register(TypeOfWork)
@@ -11,7 +11,7 @@ class TypeOfWorkAdmin(admin.ModelAdmin):
     readonly_fields = ["id"]
 
 
-@admin.register(User)
+@admin.register(UserProfile)
 class UserAdmin(admin.ModelAdmin):
     list_display = ["full_name", "phone_number", "email"]
     search_fields = ["full_name", "email"]
@@ -39,12 +39,20 @@ class EmployeeAdmin(admin.ModelAdmin):
     email.short_description = "Email"
 
 
+class RealtyInline(admin.TabularInline):
+    model = Realty
+    extra = 1
+    readonly_fields = ["id"]
+    fields = ["name", "type", "price", "area", "built_year", "photo"]
+
+
 @admin.register(Owner)
 class OwnerAdmin(admin.ModelAdmin):
     list_display = ["full_name", "phone_number", "email", "rating", "preferred_contact_time"]
     search_fields = ["user__full_name", "user__email"]
     list_per_page = 10
     readonly_fields = ["id", "full_name", "phone_number", "email"]
+    inlines = [RealtyInline]
 
     def full_name(self, obj):
         return obj.user.full_name
@@ -57,6 +65,7 @@ class OwnerAdmin(admin.ModelAdmin):
     def email(self, obj):
         return obj.user.email
     email.short_description = "Email"
+
 
 
 @admin.register(Customer)

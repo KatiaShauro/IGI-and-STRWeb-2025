@@ -1,8 +1,9 @@
 import calendar
 import json
-from http import HTTPStatus
-
+import logging
+import pytz
 import requests
+from http import HTTPStatus
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import Http404
@@ -12,17 +13,21 @@ from django.utils.timezone import now, localtime
 from .forms import CustomRegistrationForm
 from .models import AboutCompany, FAQ, PrivacyPolicy, Vacancy, Contacts
 from articles.models import Article
-from estate_agency.models import Employee, User, Owner, Customer
+from estate_agency.models import Employee, UserProfile, Owner, Customer
 
 
+logger = logging.getLogger(__name__)
 
 def home(request):
     last_article = Article.objects.last()
     if not last_article:
         last_article = ""
 
-    utc_now = now()
+    utc_now = now().astimezone(tz=pytz.utc)
     local_now = localtime(utc_now)
+
+    logger.debug(f"UTC: {utc_now}")
+    logger.debug(f"LOCAL: {local_now}")
 
     cal = calendar.TextCalendar()
     text_calendar = cal.formatmonth(local_now.year, local_now.month)
@@ -33,6 +38,7 @@ def home(request):
             response_body = json.loads(response.content)
             cat_fact = response_body["fact"]
         else:
+            logger.error("Unable to access cat-fact API")
             cat_fact = "No cat fact ☹"
     except Exception:
         cat_fact = "No cat fact ☹"
@@ -43,9 +49,10 @@ def home(request):
         dog_image_url = data["message"]
     except Exception:
         dog_image_url = "No dog picture ☹"
+        logger.error("Unable to access dog-picture API")
 
     context = {
-        "utc_now": utc_now,
+        "utc_now": utc_now.strftime("%d/%m/%Y %H:%M"),
         "local_now": local_now,
         "text_calendar": text_calendar,
         "article": last_article,
@@ -98,6 +105,7 @@ def register(request):
             auth_login(request, user)
             return redirect("home")
         else:
+            logger.warning(f"User {request.user} send not valid registration form")
             message = "Form is not valid!"
     else:
         form = CustomRegistrationForm()
@@ -118,13 +126,14 @@ def login(request):
             auth_login(request, user)
             return redirect("profile")
     else:
+        logger.info(f"User {request.user} was redirected to login form")
         form = AuthenticationForm()
     return render(request, "registration/login.html",
                   {"form": form})
 
 
 def profile(request):
-    user = User.objects.get(user=request.user)
+    user = UserProfile.objects.get(user=request.user)
     employee = Employee.objects.filter(user=user).first()
     owner = Owner.objects.filter(user=user).first()
     customer = Customer.objects.filter(user=user).first()

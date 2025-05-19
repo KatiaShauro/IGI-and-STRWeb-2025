@@ -52,28 +52,35 @@
         <div>
             <h1>Estate agency actions</h1>
             {% if customer %}
-            <p><strong>For customers : </strong></p>
-            <ul>
-                <li><a href="{% url 'estates-list' %}">Estates list</a></li>
-                <li><a href="{% url 'my-deals' %}">My deals</a></li>
-            </ul>
+                <p><strong>For customers : </strong></p>
+                <ul>
+                    <li><a href="{% url 'estates-list' %}">Estates list</a></li>
+                    <li><a href="{% url 'my-deals' %}">My deals</a></li>
+                </ul>
             {% endif %}
             {% if owner %}
-            <p><strong>For owners : </strong></p>
-            <ul>
-                <li><a href="{% url 'estates-list' %}">Estates list</a></li>
-                <li><a href="{% url 'realty-add' %}">Add real estate</a></li>
-                <li><a href="{% url 'my-estates' %}">My estates</a></li>
-                <li><a href="{% url 'my-deals' %}">My deals</a></li>
-            </ul>
+                <p><strong>For owners : </strong></p>
+                <ul>
+                    <li><a href="{% url 'estates-list' %}">Estates list</a></li>
+                    <li><a href="{% url 'realty-add' %}">Add real estate</a></li>
+                    <li><a href="{% url 'my-estates' %}">My estates</a></li>
+                    <li><a href="{% url 'my-deals' %}">My deals</a></li>
+                </ul>
             {% endif %}
-            {% if employee %}
-            <p><strong>For employees : </strong></p>
-            <ul>
-                <li><a href="{% url 'estates-list' %}">Estates list</a></li>
-                <li><a href="{% url 'deals' %}">All deals</a></li>
-                <li><a href="{% url 'statistics' %}">Statistics</a></li>
-            </ul>
+            {% if user.is_staff %}
+                <p><strong>For employees : </strong></p>
+                <ul>
+                    <li><a href="{% url 'estates-list' %}">Estates list</a></li>
+                    <li><a href="{% url 'deals' %}">All deals</a></li>
+                </ul>
+            {% endif %}
+            {% if user.is_superuser %}
+                <p><strong>For admin : </strong></p>
+                <ul>
+                    <li><a href="{% url 'statistics' %}">Statistics</a></li>
+                    <li><a href="{% url 'customers' %}">Customers</a></li>
+                    <li><a href="{% url 'employees' %}">Employees</a></li>
+                </ul>
             {% endif %}
         </div>
 

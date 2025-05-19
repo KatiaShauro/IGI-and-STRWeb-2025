@@ -5,13 +5,11 @@
 {% block content %}
 
 <form method="get" style="margin-bottom: 20px; text-align: center;">
-    <input type="text" name="q" placeholder="Search by name..." value="{{ request.GET.q }}">
+    <input type="text" name="q" placeholder="Search by type..." value="{{ request.GET.q }}">
     <select name="sort_by">
         <option value="">Sort by</option>
         <option value="price" {% if request.GET.sort_by == 'price' %}selected{% endif %}>Price (asc)</option>
         <option value="-price" {% if request.GET.sort_by == '-price' %}selected{% endif %}>Price (desc)</option>
-        <option value="name" {% if request.GET.sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
-        <option value="-name" {% if request.GET.sort_by == '-name' %}selected{% endif %}>Name (Z-A)</option>
     </select>
     <button type="submit">Apply</button>
 </form>
