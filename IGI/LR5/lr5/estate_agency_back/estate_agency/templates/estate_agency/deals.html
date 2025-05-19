@@ -3,20 +3,20 @@
 {% block site_name %}Deals{% endblock %}
 
 {% block content %}
-{% if not deals %}
-    <p><div  style="text-decoration: none; color:  #2c3e50; font-size: 30px;">
-        You haven't got any deals yet.
-    </div></p>
-{% else %}
-    <div style="width: 400px; margin: 0 auto; gap: 20px;">
-        {% if user.is_superuser %}
+    {% if user.is_superuser %}
         <p style="text-align: center;">
             <a href="{% url 'deal-admin-create' %}"
                style="text-decoration: none; color:  #2c3e50; font-size: 30px;">
                 + Add deal
             </a>
         </p>
-        {% endif %}
+    {% endif %}
+{% if not deals %}
+    <p><div  style="text-decoration: none; color:  #2c3e50; font-size: 30px;">
+        No deals provided
+    </div></p>
+{% else %}
+    <div style="width: 400px; margin: 0 auto; gap: 20px;">
 
         {% for deal in deals %}
         <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px;

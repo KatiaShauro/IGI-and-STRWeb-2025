@@ -3,7 +3,7 @@ import datetime
 from django import forms
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from .models import Customer, Owner, Employee, Realty, Deal
+from .models import Customer, Owner, Employee, Realty, Deal, UserProfile
 
 secrets = {
     "employee": "employee_secret_code",
@@ -28,12 +28,12 @@ class CustomerAdminForm(forms.ModelForm):
         validators=[MinValueValidator(0)],
         help_text="Budget must be positive"
     )
+    user = forms.ModelChoiceField(queryset=UserProfile.objects.all())
     class Meta:
         model = Customer
         fields = ["budget", "notes", "is_vip", "user"]
         widgets = {
             "notes": forms.Textarea(attrs={"rows": 4, "placeholder": "Leave some notes about yourself..."}),
-            "user": forms.Select()
         }
 
 

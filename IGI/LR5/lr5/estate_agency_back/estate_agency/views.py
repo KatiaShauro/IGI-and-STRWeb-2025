@@ -65,7 +65,25 @@ class EmployeeAdminCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         user = form.instance.user
-        ##### пометь ис стафф!!!!
+
+        if Owner.objects.filter(user=user).exists() or Customer.objects.filter(user=user).exists():
+            messages.error(self.request,
+            "You are already registered as owner or customer. You can't be an employee."
+            "The entered data will not be written to the database.")
+            logger.warning(f"User {user} already registered as owner or customer")
+            return redirect('employees')
+
+        if Employee.objects.filter(user=user).exists():
+            messages.error(self.request, "You are already registered as an employee. "
+                                         "The entered data will not be written to the database.")
+            logger.warning(f"User {user} already registered as employee")
+            return redirect('employees')
+
+
+        user.user.is_staff = True
+        user.user.save()
+        form.instance.user = user
+        return super().form_valid(form)
 
 
 def employees(request):
@@ -101,6 +119,13 @@ class CustomerAdminCreateView(LoginRequiredMixin, CreateView):
     form_class = CustomerAdminForm
     template_name = 'form.html'
     success_url = reverse_lazy('customers')
+
+    def form_valid(self, form):
+        user = form.instance.user
+        user.is_customer = True
+        user.save()
+        form.instance.user = user
+        return super().form_valid(form)
 
 
 class CustomerAdminUpdateView(LoginRequiredMixin, UpdateView):

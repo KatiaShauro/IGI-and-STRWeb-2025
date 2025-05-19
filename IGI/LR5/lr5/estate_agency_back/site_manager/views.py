@@ -15,6 +15,8 @@ from .models import AboutCompany, FAQ, PrivacyPolicy, Vacancy, Contacts
 from articles.models import Article
 from estate_agency.models import Employee, UserProfile, Owner, Customer
 
+from .stats import get_deals_count, get_average_age, get_employees_stats, get_realty_stats
+from estate_agency.models import Deal, Realty
 
 logger = logging.getLogger(__name__)
 
@@ -144,4 +146,14 @@ def profile(request):
 
 
 def statistics(request):
-    return render(request, 'site_manager/statistics.html')
+    get_employees_stats(Deal.objects.all())
+    get_realty_stats(Realty.objects.all())
+    context = {
+        "deals_count": get_deals_count(Deal.objects.all()),
+        "customers_average_age": get_average_age(Customer.objects.all()),
+        "employees_average_age": get_average_age(Employee.objects.all()),
+        "owners_average_age": get_average_age(Owner.objects.all()),
+        "employees_stats_picture": "/media/stats/employees_sales_stats.png",
+        "realty_stats_picture": "/media/stats/realty_pie_chart.png"
+    }
+    return render(request, 'site_manager/statistics.html', context)
