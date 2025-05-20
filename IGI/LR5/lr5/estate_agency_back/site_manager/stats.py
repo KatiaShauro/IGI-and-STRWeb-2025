@@ -25,7 +25,7 @@ def get_employees_stats(deals: QuerySet[Deal]):
         if deal.employee:
             deal_counts[deal.employee] = deal_counts.get(deal.employee, 0) + 1
 
-    names = [emp.full_name for emp in deal_counts.keys()]
+    names = [emp.user.full_name for emp in deal_counts.keys()]
     counts = list(deal_counts.values())
 
     plt.figure(figsize=(10, 6))

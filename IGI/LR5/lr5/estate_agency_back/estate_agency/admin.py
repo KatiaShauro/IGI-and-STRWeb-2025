@@ -15,7 +15,8 @@ class TypeOfWorkAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     list_display = ["full_name", "phone_number", "email"]
     search_fields = ["full_name", "email"]
-    list_per_page = 10
+    sortable_by = ["email", "user__username"]
+    list_per_page = 20
     readonly_fields = ["id"]
 
 

@@ -5,7 +5,7 @@ from articles.models import Article
 
 # Create your views here.
 def news(request):
-    articles = Article.objects.all()
+    articles = Article.objects.all().order_by('-id')
     return render(request, 'articles/news.html',
                   {"articles": articles})
 

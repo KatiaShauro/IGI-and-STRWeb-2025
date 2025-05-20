@@ -150,9 +150,9 @@ def statistics(request):
     get_realty_stats(Realty.objects.all())
     context = {
         "deals_count": get_deals_count(Deal.objects.all()),
-        "customers_average_age": get_average_age(Customer.objects.all()),
-        "employees_average_age": get_average_age(Employee.objects.all()),
-        "owners_average_age": get_average_age(Owner.objects.all()),
+        "customers_average_age": round(get_average_age(Customer.objects.all()), 3),
+        "employees_average_age": round(get_average_age(Employee.objects.all()), 3),
+        "owners_average_age": round(get_average_age(Owner.objects.all()), 3),
         "employees_stats_picture": "/media/stats/employees_sales_stats.png",
         "realty_stats_picture": "/media/stats/realty_pie_chart.png"
     }
